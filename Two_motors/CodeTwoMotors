@@ -1,0 +1,62 @@
+compile-to-flash
+: initAll
+init-MotorRightBackward start-MotorRightBackward
+init-MotorRightForward start-MotorRightForward
+init-MotorLeftBackward start-MotorLeftBackward
+init-MotorLeftForward start-MotorLeftForward
+;
+
+compile-to-flash  
+: enableRight  \ blue white right
+ pin import   
+3 output-pin  \ gpio03
+high 3 pin!  
+;  
+
+compile-to-flash
+: disableRight
+ pin import   
+3 output-pin  
+low 3 pin!  
+;  
+
+compile-to-flash  
+: enableLeft \ green left yellow
+ pin import   
+09 output-pin  \ gpio09
+high 09 pin!  
+;  
+
+compile-to-flash  
+: disableLeft  
+pin import
+09 output-pin  
+low 09 pin!  
+;  
+
+compile-to-flash
+: enableAll   enableRight enableLeft ;
+: disableAll disableRight disableLeft ;
+
+
+compile-to-flash
+: Forward  100 MotorRightForward  100 MotorLeftForward ;
+: Backward 100 MotorRightBackward 100 MotorLeftBackward ;
+: StopForward 0 MotorRightForward  0 MotorLeftForward ;
+: StopBackward 0  MotorRightBackward  0 MotorLeftBackward ;
+: stop StopForward StopBackward ;
+
+compile-to-flash
+: motors  Forward 2000 ms StopForward 500 ms Backward 2000 ms stop ;
+
+\ application
+enableAll initAll motors stop disableAll \ application test
+
+\ Video code:
+: RightForward10 12 MotorRightForward 100 ms stop 100 ms ;
+: LeftBackward10 12 MotorLeftBackward 100 ms stop 100 ms ;
+: nXRight 10 0 DO RightForward10 LOOP  ;
+: nXLeft 10 0 DO LeftBackward10 LOOP  ;
+: nX 20 0 DO RightForward10 500 ms LeftBackward10  LOOP  ;
+: run enableRight enableLeft initAll  stop 2000 ms nX 2000 disableAll ;
+
