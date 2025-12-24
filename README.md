@@ -17,4 +17,3 @@ Two motors with Zeotoforth
 https://www.youtube.com/watch?v=f4kNm3qmtwU
 
 
-<img width="304" height="420" alt="repartiteurEtPipico" src="https://github.com/user-attachments/assets/af0d30ec-7a84-47e4-9b2b-66dc49a55310" />
