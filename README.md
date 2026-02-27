@@ -11,3 +11,5 @@ Line follower in both directions: https://www.youtube.com/watch?v=-Zhlup8pzoc
 Two motors with Zeotoforth:  https://www.youtube.com/watch?v=f4kNm3qmtwU
 
 Half_turn_clockwise:  https://www.youtube.com/watch?v=zml6NUPZIgA
+
+Four sensors: https://www.youtube.com/watch?v=aRTb_WDv5Ns
