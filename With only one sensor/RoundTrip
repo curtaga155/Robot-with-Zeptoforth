@@ -1,0 +1,80 @@
+\ compile-to-flash
+
+: initAllMotors
+init-MotorRightBackward start-MotorRightBackward
+init-MotorRightForward start-MotorRightForward
+init-MotorLeftBackward start-MotorLeftBackward
+init-MotorLeftForward start-MotorLeftForward
+;
+
+ : enableRight  
+ pin import   
+9 output-pin  
+high 9 pin!  
+;  
+
+: disableRight
+ pin import   
+9 output-pin  
+low 9 pin!  
+;  
+
+: enableLeft \ green left yellow
+ pin import   
+3 output-pin  \ gpio09
+high 3 pin!  
+;  
+
+: disableLeft  
+pin import
+3 output-pin  
+low 3 pin!  
+;  
+
+: enableAll   enableRight enableLeft ;
+: disableAll disableRight disableLeft ;
+
+ : Forward  100 MotorRightForward  100 MotorLeftForward ;
+ : Backward 100 MotorRightBackward 100 MotorLeftBackward ;
+ : StopForward 0 MotorRightForward  0 MotorLeftForward ;
+ : StopBackward 0  MotorRightBackward  0 MotorLeftBackward ;
+ : stop_motors StopForward StopBackward ; 
+
+\ applications
+: test_motors  Forward 2000 ms stop_motors 500 ms Backward 2000 ms stop_motors ;
+: start_test_motors enableAll initAllmotors test_motors stop_motors ;
+enableAll initAllmotors adc import  1 constant adc_pin1  0 constant adc_init
+: sensor_value adc_pin1 adc_init adc@ 10 / ;
+: sensor_test begin  sensor_value . cr 1000 ms key? until ;
+
+: stop_left   0 MotorLeftForward ;
+: stop_right  0 MotorRightForward ;
+
+\ half-turn
+: half-turn-clockwise 100 MotorRightBackward 100 MotorLeftForward 1250 ms stop_motors ;
+ : half-turn-anticlockwise 100 MotorRightForward  100 MotorLeftBackward 1300 ms stop_motors ; 
+
+\ anticlockwise forward white_on_the_right
+: white_on_the_right_stop_right sensor_value  190 < if stop_right   then ;
+: white_on_the_right_stop_left   sensor_value  210 > if stop_left   then  ;
+: robot_white begin Forward 
+white_on_the_right_stop_right 
+white_on_the_right_stop_left  
+50 ms   sensor_value  350 >  until ; 
+
+\ clockwise forward black on the right_
+
+: black_on_the_right_stop_left  sensor_value  190 < if stop_left then ;
+: black_on_the_right_stop_right sensor_value  210 > if stop_right  then ;
+
+: robot_black begin Forward 
+black_on_the_right_stop_left
+black_on_the_right_stop_right  
+50 ms   sensor_value  350 > until ;
+
+: run_clockwise  robot_black stop_motors ;
+: run_anticlockwise 1000 ms robot_white stop_motors ; 
+: delay_clockwise 6000 ms run_clockwise ;
+: delay_anticlockwise 6000 ms run_anticlockwise ;
+: roundtrip 6000 ms run_clockwise  half-turn-clockwise run_anticlockwise  half-turn-anticlockwise run_clockwise ;
+
