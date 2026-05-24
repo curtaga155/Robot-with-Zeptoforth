@@ -17,3 +17,5 @@ Four sensors: https://www.youtube.com/watch?v=aRTb_WDv5Ns
 Paper circle: https://www.youtube.com/watch?v=YH5v2SRycHI
 
 In the walls: https://www.youtube.com/watch?v=_rN8oKp1vq0
+
+The wriggling rat: https://www.youtube.com/watch?v=VFQdMA_rMvY
