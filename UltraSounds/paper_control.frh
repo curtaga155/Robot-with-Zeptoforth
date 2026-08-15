@@ -1,0 +1,33 @@
+\ Control a robot with a piece of paper.
+
+
+Motors_Robot import  
+All_motors import   
+Full-Sensors import 
+pin import
+Ultra_Sounds import 
+ 
+\ init sensor
+: RIGHTPI/4SENSOR  ( -- ) 14   pin@  ; 
+: LEFTPI/4SENSOR  ( -- ) 22 pin@  ;
+: Forward70  70 MotorRightForward  70 MotorLeftForward ;
+: Backward70 70 MotorRightBackward 70 MotorLeftBackward ;
+
+\ init rotate
+initAll
+: step-anticlockwise ( -- )  100 MotorRightForward 100 MotorLeftBackward 1 ms  stop_motors  ;  
+: step-clockwise ( -- )  100 MotorRightBackward 100 MotorLeftForward  1 ms
+ stop_motors  ; 
+: quater-anticlockwise ( -- ) 200 0 do  step-anticlockwise loop ;
+: quater-clockwise ( -- )  200 0 do  step-clockwise loop ; 
+
+
+\ application
+: Side-control RIGHTPI/4SENSOR 0<> if quater-anticlockwise else Forward70 then
+LEFTPI/4SENSOR 0<> if quater-clockwise Forward70  then ;
+: US-control measure-echo 300 < if stop_motors Backward70 800 ms  stop_motors  then ;
+: stop adc_value 300 < if reboot then ;
+: run_us  3000 ms  initAll  begin  Forward70 US-control Side-control stop again  ; 
+
+\ run_us
+
